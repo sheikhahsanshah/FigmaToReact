@@ -135,7 +135,7 @@ const Login = () => {
           
           {/* CAPTCHA Component */}
           <ReCAPTCHA
-            sitekey="6LeQ4XAUAAAAAAyEQGUBaWbzxAsvhdzOVY8mq2yR"
+            sitekey="6LcmJm0qAAAAAGtjiPS-Tm9fKUOA6SDS-c-xJanR"
             onChange={handleCaptchaChange}
             style={{ marginTop: "16px", marginLeft: "25px" }} 
           />
