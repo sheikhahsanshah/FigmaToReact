@@ -68,7 +68,7 @@ const Chat = ({ setShowSidebar }) => {
       sx={{
         p: 2,
         flexGrow: 1,
-        height: "100vh",
+        height: "100%",
         bgcolor: "transparent",
       }}
     >
