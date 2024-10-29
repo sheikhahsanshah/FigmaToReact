@@ -78,18 +78,12 @@ const Login = () => {
     
     // Identifier validation (email or phone)
     if (!formData.identifier) {
-      newErrors.identifier = "Email or phone number is required";
+      newErrors.identifier = "Email is required";
     } else if (formData.identifier.includes('@')) {
       // Email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.identifier)) {
         newErrors.identifier = "Invalid email format";
-      }
-    } else {
-      // Phone validation
-      const phoneRegex = /^\+?[\d\s-]{10,}$/;
-      if (!phoneRegex.test(formData.identifier)) {
-        newErrors.identifier = "Invalid phone number format";
       }
     }
     
