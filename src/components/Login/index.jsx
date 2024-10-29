@@ -80,12 +80,12 @@ const Login = () => {
     if (!formData.identifier) {
       newErrors.identifier = "Email is required";
     } else if (formData.identifier.includes('@')) {
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Enhanced email validation
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(formData.identifier)) {
-        newErrors.identifier = "Invalid email format";
+          newErrors.identifier = "Invalid email format";
       }
-    }
+  }
     
     // Password validation
     if (!formData.password) {

@@ -32,6 +32,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
         height: "100vh",
         width: "100%",
         bgcolor: "white",
+        overflow: "hidden", // Prevent horizontal scroll
       }}
     >
       {/* Header */}
@@ -79,7 +80,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
           overflowY: "auto",
           width: "100%",
           backgroundColor: "white",
-          pb: { xs: "80px", md: "100px" }, // Add padding bottom to account for the form
+          pb: { xs: "80px", md: "100px" },
           '&::-webkit-scrollbar': {
             width: '6px',
           },
@@ -118,16 +119,18 @@ const Chat = ({ setShowSidebar, currentChat }) => {
         </Box>
       </Box>
 
-      {/* Form Section - Fixed at bottom */}
+      {/* Form Section - Fixed at bottom with correct width */}
       <Box
         sx={{
-          position: "fixed",
+          position: "absolute", // Changed from fixed to absolute
           bottom: 0,
+          left: 0,
+          right: 0,
           backgroundColor: "white",
           borderTop: "1px solid #E9ECEF",
           zIndex: 10,
           boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
-          width: "100%",
+          width: "100%", // This ensures it takes parent width
         }}
       >
         <Box
