@@ -1,27 +1,18 @@
 import React, { Suspense, lazy, useState, useEffect } from "react";
-import { Box, CircularProgress, CssBaseline, useTheme, useMediaQuery } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 const Chat = lazy(() => import("../components/Chat"));
 const Sidebar = lazy(() => import("../components/Sidebar"));
 
 const ChatPage = () => {
-  const theme = useTheme();
-  const isDesktop = useMediaQuery('(min-width:991px)');
-  const [showSidebar, setShowSidebar] = useState(isDesktop);
-  const [containerWidth, setContainerWidth] = useState(isDesktop ? "400px" : "100%");
+  const [showSidebar, setShowSidebar] = useState(window.innerWidth > 991);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 991);
 
-  // Effect to handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const width = window.innerWidth;
-      setContainerWidth(width > 991 ? "400px" : "100%");
-      
-      // Only auto-show sidebar on desktop
-      if (width > 991) {
-        setShowSidebar(true);
-      } else {
-        setShowSidebar(false);
-      }
+      const isDesktopView = window.innerWidth > 991;
+      setIsDesktop(isDesktopView);
+      setShowSidebar(isDesktopView);
     };
 
     // Set initial values
@@ -34,108 +25,58 @@ const ChatPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Effect to sync showSidebar with isDesktop
-  useEffect(() => {
-    setShowSidebar(isDesktop);
-  }, [isDesktop]);
-
   const handleSidebarClose = () => {
     setShowSidebar(false);
   };
 
   return (
-    <Box 
-      sx={{ 
-        display: "flex",
-        position: "relative",
-        overflow: "hidden",
-        height: "100%",
-      }}
-    >
-      <CssBaseline />
-
+    <div className="flex relative h-screen max-h-screen overflow-hidden bg-white">
+      {/* Sidebar */}
       <Suspense
         fallback={
           isDesktop && (
-            <Box
-              sx={{
-                p: 2,
-                width: containerWidth,
-                display: "grid",
-                placeItems: "center",
-                transition: "width 0.3s ease",
-              }}
-            >
+            <div className="w-[400px] p-2 grid place-items-center">
               <CircularProgress />
-            </Box>
+            </div>
           )
         }
       >
-        <Sidebar 
-          open={showSidebar} 
-          onClose={handleSidebarClose}
-          sx={{
-            width: containerWidth,
-            position: isDesktop ? "relative" : "fixed",
-            height: "100%",
-            zIndex: theme.zIndex.drawer,
-            transition: "all 0.3s ease",
-            transform: showSidebar ? "translateX(0)" : "translateX(-100%)",
-            backgroundColor: "background.paper",
-            boxShadow: isDesktop ? "none" : theme.shadows[4],
-            '& .MuiDrawer-paper': {
-              width: containerWidth,
-              position: "static",
-            },
-          }}
-        />
+        <div
+          className={`${
+            isDesktop ? 'relative w-[400px]' : 'fixed w-full md:w-[400px]'
+          } h-screen transition-transform duration-300 ease-in-out transform ${
+            showSidebar ? 'translate-x-0' : '-translate-x-full'
+          } bg-white shadow-lg z-50`}
+        >
+          <Sidebar open={showSidebar} onClose={handleSidebarClose} />
+        </div>
       </Suspense>
 
+      {/* Main Chat Area */}
       <Suspense
         fallback={
-          <Box
-            sx={{
-              p: 2,
-              flexGrow: 1,
-              height: "100vh",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <div className="flex-grow h-screen flex justify-center items-center p-2">
             <CircularProgress />
-          </Box>
+          </div>
         }
       >
-        <Chat 
-          setShowSidebar={setShowSidebar}
-          sx={{
-            flexGrow: 1,
-            height: "100%",
-            overflow: "hidden",
-            transition: "margin-left 0.3s ease",
-            marginLeft: isDesktop && showSidebar ? containerWidth : 0,
-          }}
-        />
+        <div
+          className={`flex-grow h-screen overflow-hidden transition-[margin] duration-300 ease-in-out ${
+            isDesktop && showSidebar ? 'ml-[400px]' : 'ml-0'
+          }`}
+        >
+          <Chat setShowSidebar={setShowSidebar} />
+        </div>
       </Suspense>
 
-      {/* Overlay for mobile */}
+      {/* Mobile Overlay */}
       {!isDesktop && showSidebar && (
-        <Box
+        <div
           onClick={handleSidebarClose}
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            bgcolor: "rgba(0,0,0,0.5)",
-            zIndex: theme.zIndex.drawer - 1,
-            transition: "opacity 0.3s ease",
-          }}
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
         />
       )}
-    </Box>
+    </div>
   );
 };
 
