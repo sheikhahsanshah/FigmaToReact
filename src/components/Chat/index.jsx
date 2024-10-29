@@ -28,7 +28,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
+        height: "100%",
         width: "100%",
         overflow: "hidden",
         bgcolor: "white",
