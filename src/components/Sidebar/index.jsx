@@ -20,7 +20,7 @@ const Sidebar = ({ open, onClose }) => {
         width: drawerWidth,
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
-          overflowY: "hidden",
+          // overflowY: "hidden",
           width: drawerWidth,
           boxSizing: "border-box",
           border: 0,
