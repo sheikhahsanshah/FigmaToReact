@@ -75,7 +75,7 @@ const ChatPage = () => {
         display: "flex",
         position: "relative",
         overflow: "hidden",
-        height: "100vh",
+        height: "100%",
       }}
     >
       <CssBaseline />
