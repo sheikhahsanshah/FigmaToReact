@@ -6,7 +6,7 @@ import Form from "./Form";
 import Messages from "./Messages";
 import { Menu } from "@mui/icons-material";
 
-const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
+const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
   const scrollableDivRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -26,14 +26,16 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
     <Box
       component="main"
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        height: "100vh",
         width: "100%",
         bgcolor: "white",
+        overflow: "hidden", // Prevent horizontal scroll
       }}
     >
-      {/* Header - Fixed */}
+      {/* Header */}
       <Box
         sx={{
           py: 1.5,
@@ -45,13 +47,19 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
           backgroundColor: "white",
           minHeight: "64px",
           width: "100%",
-          flexShrink: 0, // Prevent header from shrinking
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
         }}
       >
-        <Menu
-          sx={{ cursor: "pointer" }}
-          onClick={() => setShowSidebar((prev) => !prev)}
-        />
+        {window.innerWidth > 990 ? (
+          <img src={resize} alt="" style={{ cursor: "pointer" }} />
+        ) : (
+          <Menu
+            sx={{ cursor: "pointer" }}
+            onClick={() => setShowSidebar((prev) => !prev)}
+          />
+        )}
         <Typography
           variant="h6"
           fontWeight={600}
@@ -59,20 +67,20 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
             fontSize: { xs: "1rem", md: "1.25rem" },
           }}
         >
-          {isNewChat ? "New Chat" : currentChat.title}
+          {currentChat.title}
         </Typography>
         <Avatar alt="John Doe" src="/static/images/avatar/1.jpg" />
       </Box>
 
-      {/* Scrollable Messages Container */}
+      {/* Messages Section */}
       <Box
         ref={scrollableDivRef}
         sx={{
-          flexGrow: 1,
+          flex: 1,
           overflowY: "auto",
-          overflowX: "hidden",
           width: "100%",
           backgroundColor: "white",
+          pb: { xs: "80px", md: "100px" },
           '&::-webkit-scrollbar': {
             width: '6px',
           },
@@ -83,19 +91,14 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
           '&::-webkit-scrollbar-track': {
             backgroundColor: 'transparent',
           },
-          // Add padding to prevent content from being hidden behind form
-          pb: { xs: "80px", md: "100px" },
         }}
       >
         <Box 
           sx={{ 
             p: { xs: 2, md: 3 },
             width: "100%",
-            height: isNewChat ? "100%" : "auto",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: isNewChat ? "center" : "flex-start",
+            maxWidth: "100%",
+            margin: "0 auto",
           }}
         >
           {isNewChat ? (
@@ -123,29 +126,46 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
               </Typography>
             </Box>
           ) : (
-            <Messages messages={currentChat.messages} />
+            currentChat.messages.length === 0 ? (
+              <Box 
+                sx={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "center",
+                  height: "calc(100vh - 200px)",
+                  minHeight: "200px"
+                }}
+              >
+                <img src={logo} alt="logo" />
+              </Box>
+            ) : (
+              <Messages messages={currentChat.messages} />
+            )
           )}
+          
         </Box>
       </Box>
 
-      {/* Form - Fixed at bottom */}
+      {/* Form Section - Fixed at bottom with correct width */}
       <Box
         sx={{
-          position: "fixed",
+          position: "absolute", // Changed from fixed to absolute
           bottom: 0,
-          left: { xs: 0, md: isNewChat ? 0 : "400px" },
+          left: 0,
           right: 0,
           backgroundColor: "white",
           borderTop: "1px solid #E9ECEF",
-          boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
           zIndex: 10,
-          transition: "left 0.3s ease",
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
+          width: "100%", // This ensures it takes parent width
         }}
       >
         <Box
           sx={{
-            p: { xs: 2, md: 3 },
             width: "100%",
+            maxWidth: "100%",
+            margin: "0 auto",
+            p: { xs: 2, md: 3 },
           }}
         >
           <Form />

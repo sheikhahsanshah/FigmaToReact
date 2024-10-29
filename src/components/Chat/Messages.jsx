@@ -43,7 +43,7 @@ const Messages = ({ messages = [] }) => {
                   bgcolor: "#f5f5f5",
                   borderRadius: "10px",
                   width: "fit-content",
-                  maxWidth: "500px",
+                  maxWidth: "80%",
                   textWrap: "wrap",
                   border: "1px solid #E9ECEF",
                 }}
