@@ -26,11 +26,11 @@ const Chat = ({ setShowSidebar, currentChat }) => {
     <Box
       component="main"
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: "column",
-        height: "100%",
+        height: "100vh",
         width: "100%",
-        overflow: "hidden",
         bgcolor: "white",
       }}
     >
@@ -46,6 +46,9 @@ const Chat = ({ setShowSidebar, currentChat }) => {
           backgroundColor: "white",
           minHeight: "64px",
           width: "100%",
+          position: "sticky",
+          top: 0,
+          zIndex: 10,
         }}
       >
         {window.innerWidth > 990 ? (
@@ -72,11 +75,11 @@ const Chat = ({ setShowSidebar, currentChat }) => {
       <Box
         ref={scrollableDivRef}
         sx={{
-          flexGrow: 1,
+          flex: 1,
           overflowY: "auto",
           width: "100%",
-          display: "flex",
           backgroundColor: "white",
+          pb: { xs: "80px", md: "100px" }, // Add padding bottom to account for the form
           '&::-webkit-scrollbar': {
             width: '6px',
           },
@@ -93,9 +96,8 @@ const Chat = ({ setShowSidebar, currentChat }) => {
           sx={{ 
             p: { xs: 2, md: 3 },
             width: "100%",
-            maxWidth: "100%", // Changed from 1000px to 100%
+            maxWidth: "100%",
             margin: "0 auto",
-            flex: 1,
           }}
         >
           {currentChat.messages.length === 0 ? (
@@ -104,7 +106,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
                 display: "flex", 
                 alignItems: "center", 
                 justifyContent: "center",
-                height: "100%",
+                height: "calc(100vh - 200px)",
                 minHeight: "200px"
               }}
             >
@@ -116,19 +118,24 @@ const Chat = ({ setShowSidebar, currentChat }) => {
         </Box>
       </Box>
 
-      {/* Form Section */}
+      {/* Form Section - Fixed at bottom */}
       <Box
         sx={{
-          width: "100%",
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
           backgroundColor: "white",
           borderTop: "1px solid #E9ECEF",
           zIndex: 10,
+          boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
+          width: "100%",
         }}
       >
         <Box
           sx={{
             width: "100%",
-            maxWidth: "100%", // Changed from 1000px to 100%
+            maxWidth: "100%",
             margin: "0 auto",
             p: { xs: 2, md: 3 },
           }}
