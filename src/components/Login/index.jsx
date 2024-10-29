@@ -9,6 +9,7 @@ import {
   styled,
   TextField,
   Typography,
+  Alert,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -33,18 +34,107 @@ const SignInButton = styled(Button)({
 
 const Login = () => {
   const history = useHistory();
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    identifier: "",
+    password: "",
+  });
+  
+  // UI state
   const [showPassword, setShowPassword] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Error state
+  const [errors, setErrors] = useState({
+    identifier: "",
+    password: "",
+    general: "",
+  });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  
   const handleCaptchaChange = (value) => setCaptchaVerified(!!value);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (captchaVerified) {
-      history.push("/chat");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value.trim()
+    }));
+    
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Identifier validation (email or phone)
+    if (!formData.identifier) {
+      newErrors.identifier = "Email or phone number is required";
+    } else if (formData.identifier.includes('@')) {
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.identifier)) {
+        newErrors.identifier = "Invalid email format";
+      }
     } else {
-      alert("Please complete the CAPTCHA");
+      // Phone validation
+      const phoneRegex = /^\+?[\d\s-]{10,}$/;
+      if (!phoneRegex.test(formData.identifier)) {
+        newErrors.identifier = "Invalid phone number format";
+      }
+    }
+    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate CAPTCHA
+    if (!captchaVerified) {
+      setErrors(prev => ({
+        ...prev,
+        general: "Please complete the CAPTCHA verification"
+      }));
+      return;
+    }
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Mock successful login
+      history.push("/chat");
+      
+    } catch (error) {
+      setErrors(prev => ({
+        ...prev,
+        general: "Invalid email/phone or password"
+      }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,10 +152,22 @@ const Login = () => {
           Sign in to your account
         </Typography>
 
+        {errors.general && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {errors.general}
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
+            name="identifier"
             label="Phone number or email"
+            value={formData.identifier}
+            onChange={handleChange}
+            error={!!errors.identifier}
+            helperText={errors.identifier}
+            disabled={isLoading}
             sx={{
               mb: 2.5,
               "& .MuiOutlinedInput-root": {
@@ -80,17 +182,21 @@ const Login = () => {
           />
           <TextField
             fullWidth
+            name="password"
             label="Password"
             type={showPassword ? "text" : "password"}
+            value={formData.password}
+            onChange={handleChange}
+            error={!!errors.password}
+            helperText={errors.password}
+            disabled={isLoading}
             variant="outlined"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
                     aria-label={
-                      showPassword
-                        ? "hide the password"
-                        : "display the password"
+                      showPassword ? "hide the password" : "display the password"
                     }
                     onClick={handleClickShowPassword}
                     edge="end"
@@ -124,20 +230,24 @@ const Login = () => {
             type="submit"
             fullWidth
             variant="contained"
+            disabled={isLoading}
             sx={{
               my: 2,
               backgroundColor: "#007BFF",
               color: "#fff",
+              "&.Mui-disabled": {
+                backgroundColor: "#007BFF80",
+                color: "#fff",
+              },
             }}
           >
-            Sign in
+            {isLoading ? "Signing in..." : "Sign in"}
           </SignInButton>
-          
-          {/* CAPTCHA Component */}
+
           <ReCAPTCHA
             sitekey="6LcmJm0qAAAAAGtjiPS-Tm9fKUOA6SDS-c-xJanR"
             onChange={handleCaptchaChange}
-            style={{ marginTop: "16px", marginLeft: "25px" }} 
+            style={{ marginTop: "16px", marginLeft: "25px" }}
           />
         </form>
 
@@ -169,7 +279,7 @@ const Login = () => {
           fontWeight={500}
           fontSize={"14px"}
         >
-          Don’t you have an account?{" "}
+          Don't you have an account?{" "}
           <a href="#" style={{ color: "#007BFF" }}>
             Sign up
           </a>
