@@ -27,7 +27,7 @@ const Sidebar = ({ open, onClose }) => {
         },
       }}
     >
-      <Box sx={{ p: 2, bgcolor: "#FCFCFC", height: "100vh" }}>
+      <Box sx={{ p: 2, bgcolor: "#FCFCFC", height: "100%" }}>
         <div>
           {/* Logo  */}
           <Box
