@@ -76,7 +76,6 @@ const ChatPage = () => {
           sx={{
             width: containerWidth,
             position: isDesktop ? "relative" : "fixed",
-            height: "100vh",
             zIndex: theme.zIndex.drawer,
             transition: "all 0.3s ease",
             transform: showSidebar ? "translateX(0)" : "translateX(-100%)",
@@ -110,7 +109,6 @@ const ChatPage = () => {
           setShowSidebar={setShowSidebar}
           sx={{
             flexGrow: 1,
-            height: "100vh",
             overflow: "hidden",
             transition: "margin-left 0.3s ease",
             marginLeft: isDesktop && showSidebar ? containerWidth : 0,
