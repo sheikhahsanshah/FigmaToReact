@@ -7,18 +7,13 @@ const Sidebar = lazy(() => import("../components/Sidebar"));
 const ChatPage = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery('(min-width:991px)');
-  const [showSidebar, setShowSidebar] = useState(true); // Always show sidebar initially
+  const [showSidebar, setShowSidebar] = useState(isDesktop); // Only show sidebar initially on desktop
   const [containerWidth, setContainerWidth] = useState(isDesktop ? "400px" : "100%");
-  const [isChatSelected, setIsChatSelected] = useState(isDesktop); // Only true by default on desktop
+  const [isChatSelected, setIsChatSelected] = useState(false); // Start with no chat selected
   
   const initialChat = {
-    title: "What is the best way to learn React?",
-    messages: [
-      { role: "user", content: "What is the best way to learn React?" },
-      { role: "assistant", content: "The best way to learn React includes:\n1. Understanding JavaScript fundamentals\n2. Following the official React documentation\n3. Building small projects\n4. Practicing with hooks and state management\n5. Working with real APIs" },
-      { role: "user", content: "Can you suggest some good project ideas?" },
-      { role: "assistant", content: "Here are some React project ideas:\n1. Todo application\n2. Weather app\n3. Shopping cart\n4. Social media dashboard\n5. Chat application" }
-    ]
+    title: "New Chat",
+    messages: [], // Empty messages for new chat
   };
   
   const [currentChat, setCurrentChat] = useState(initialChat);
@@ -40,36 +35,33 @@ const ChatPage = () => {
       
       if (width > 991) {
         setShowSidebar(true);
-        setIsChatSelected(true);
+        setIsChatSelected(false);
       } else {
-        // On mobile, show sidebar if no chat is selected
-        setShowSidebar(!isChatSelected);
+        setShowSidebar(false);
+        setIsChatSelected(false);
       }
     };
 
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isChatSelected]);
+  }, []);
 
   // Effect to sync sidebar state with desktop mode
   useEffect(() => {
     if (isDesktop) {
       setShowSidebar(true);
-      setIsChatSelected(true);
     } else {
-      // On mobile, revert to sidebar view if no chat is selected
-      setShowSidebar(!isChatSelected);
+      setShowSidebar(false);
     }
   }, [isDesktop]);
 
   const handleSidebarClose = () => {
-    if (isChatSelected) {
+    if (isChatSelected || !isDesktop) {
       setShowSidebar(false);
     }
   };
 
-  // Handle back to sidebar (for mobile)
   const handleBackToSidebar = () => {
     if (!isDesktop) {
       setShowSidebar(true);
@@ -83,11 +75,12 @@ const ChatPage = () => {
         display: "flex",
         position: "relative",
         overflow: "hidden",
-        height: "100%",
+        height: "100vh",
       }}
     >
       <CssBaseline />
 
+      {/* Sidebar */}
       <Suspense
         fallback={
           isDesktop && (
@@ -127,41 +120,40 @@ const ChatPage = () => {
         />
       </Suspense>
 
-      {(!isDesktop && !isChatSelected) ? null : (
-        <Suspense
-          fallback={
-            <Box
-              sx={{
-                p: 2,
-                flexGrow: 1,
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          }
-        >
-          <Chat 
-            setShowSidebar={!isChatSelected ? undefined : setShowSidebar}
+      {/* Chat Area */}
+      <Suspense
+        fallback={
+          <Box
             sx={{
+              p: 2,
               flexGrow: 1,
-              height: "100%",
-              overflow: "hidden",
-              transition: "margin-left 0.3s ease",
-              marginLeft: isDesktop && showSidebar ? containerWidth : 0,
-              display: (!isDesktop && !isChatSelected) ? 'none' : 'flex',
+              height: "100vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            currentChat={currentChat}
-            onBackToSidebar={handleBackToSidebar}
-          />
-        </Suspense>
-      )}
+          >
+            <CircularProgress />
+          </Box>
+        }
+      >
+        <Chat 
+          setShowSidebar={setShowSidebar}
+          sx={{
+            flexGrow: 1,
+            height: "100%",
+            overflow: "hidden",
+            transition: "margin-left 0.3s ease",
+            marginLeft: isDesktop && showSidebar ? containerWidth : 0,
+          }}
+          currentChat={currentChat}
+          onBackToSidebar={handleBackToSidebar}
+          isNewChat={!isChatSelected && currentChat.messages.length === 0}
+        />
+      </Suspense>
 
-      {/* Overlay for mobile */}
-      {!isDesktop && showSidebar && isChatSelected && (
+      {/* Mobile Overlay */}
+      {!isDesktop && showSidebar && (
         <Box
           onClick={handleSidebarClose}
           sx={{

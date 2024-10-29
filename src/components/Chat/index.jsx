@@ -6,7 +6,7 @@ import Form from "./Form";
 import Messages from "./Messages";
 import { Menu } from "@mui/icons-material";
 
-const Chat = ({ setShowSidebar, currentChat }) => {
+const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
   const scrollableDivRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -29,10 +29,10 @@ const Chat = ({ setShowSidebar, currentChat }) => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
+        height: "100%",
         width: "100%",
         bgcolor: "white",
-        overflow: "hidden", // Prevent horizontal scroll
+        overflow: "hidden",
       }}
     >
       {/* Header */}
@@ -52,14 +52,10 @@ const Chat = ({ setShowSidebar, currentChat }) => {
           zIndex: 10,
         }}
       >
-        {window.innerWidth > 990 ? (
-          <img src={resize} alt="" style={{ cursor: "pointer" }} />
-        ) : (
-          <Menu
-            sx={{ cursor: "pointer" }}
-            onClick={() => setShowSidebar((prev) => !prev)}
-          />
-        )}
+        <Menu
+          sx={{ cursor: "pointer" }}
+          onClick={() => setShowSidebar((prev) => !prev)}
+        />
         <Typography
           variant="h6"
           fontWeight={600}
@@ -67,7 +63,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
             fontSize: { xs: "1rem", md: "1.25rem" },
           }}
         >
-          {currentChat.title}
+          {isNewChat ? "New Chat" : currentChat.title}
         </Typography>
         <Avatar alt="John Doe" src="/static/images/avatar/1.jpg" />
       </Box>
@@ -99,19 +95,36 @@ const Chat = ({ setShowSidebar, currentChat }) => {
             width: "100%",
             maxWidth: "100%",
             margin: "0 auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: isNewChat ? "center" : "flex-start",
+            minHeight: isNewChat ? "calc(100vh - 200px)" : "auto",
           }}
         >
-          {currentChat.messages.length === 0 ? (
-            <Box 
-              sx={{ 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center",
-                height: "calc(100vh - 200px)",
-                minHeight: "200px"
+          {isNewChat ? (
+            <Box
+              sx={{
+                textAlign: "center",
+                maxWidth: "600px",
               }}
             >
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo" style={{ marginBottom: "24px" }} />
+              <Typography
+                variant="h5"
+                sx={{
+                  mb: 2,
+                  fontWeight: 600,
+                }}
+              >
+                How can I help you today?
+              </Typography>
+              <Typography
+                color="text.secondary"
+                sx={{ mb: 3 }}
+              >
+                Ask me anything! I'm here to help with your questions and tasks.
+              </Typography>
             </Box>
           ) : (
             <Messages messages={currentChat.messages} />
@@ -119,10 +132,10 @@ const Chat = ({ setShowSidebar, currentChat }) => {
         </Box>
       </Box>
 
-      {/* Form Section - Fixed at bottom with correct width */}
+      {/* Form Section */}
       <Box
         sx={{
-          position: "absolute", // Changed from fixed to absolute
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
@@ -130,7 +143,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
           borderTop: "1px solid #E9ECEF",
           zIndex: 10,
           boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
-          width: "100%", // This ensures it takes parent width
+          width: "100%",
         }}
       >
         <Box
