@@ -26,16 +26,14 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
     <Box
       component="main"
       sx={{
-        position: "relative",
         display: "flex",
         flexDirection: "column",
         height: "100%",
         width: "100%",
         bgcolor: "white",
-        overflow: "hidden",
       }}
     >
-      {/* Header */}
+      {/* Header - Fixed */}
       <Box
         sx={{
           py: 1.5,
@@ -47,9 +45,7 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
           backgroundColor: "white",
           minHeight: "64px",
           width: "100%",
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
+          flexShrink: 0, // Prevent header from shrinking
         }}
       >
         <Menu
@@ -68,15 +64,15 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
         <Avatar alt="John Doe" src="/static/images/avatar/1.jpg" />
       </Box>
 
-      {/* Messages Section */}
+      {/* Scrollable Messages Container */}
       <Box
         ref={scrollableDivRef}
         sx={{
-          flex: 1,
+          flexGrow: 1,
           overflowY: "auto",
+          overflowX: "hidden",
           width: "100%",
           backgroundColor: "white",
-          pb: { xs: "80px", md: "100px" },
           '&::-webkit-scrollbar': {
             width: '6px',
           },
@@ -87,19 +83,19 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
           '&::-webkit-scrollbar-track': {
             backgroundColor: 'transparent',
           },
+          // Add padding to prevent content from being hidden behind form
+          pb: { xs: "80px", md: "100px" },
         }}
       >
         <Box 
           sx={{ 
             p: { xs: 2, md: 3 },
             width: "100%",
-            maxWidth: "100%",
-            margin: "0 auto",
+            height: isNewChat ? "100%" : "auto",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             justifyContent: isNewChat ? "center" : "flex-start",
-            minHeight: isNewChat ? "calc(100vh - 200px)" : "auto",
           }}
         >
           {isNewChat ? (
@@ -132,26 +128,24 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat = false }) => {
         </Box>
       </Box>
 
-      {/* Form Section */}
+      {/* Form - Fixed at bottom */}
       <Box
         sx={{
-          position: "absolute",
+          position: "fixed",
           bottom: 0,
-          left: 0,
+          left: { xs: 0, md: isNewChat ? 0 : "400px" },
           right: 0,
           backgroundColor: "white",
           borderTop: "1px solid #E9ECEF",
-          zIndex: 10,
           boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
-          width: "100%",
+          zIndex: 10,
+          transition: "left 0.3s ease",
         }}
       >
         <Box
           sx={{
-            width: "100%",
-            maxWidth: "100%",
-            margin: "0 auto",
             p: { xs: 2, md: 3 },
+            width: "100%",
           }}
         >
           <Form />
