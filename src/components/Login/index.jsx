@@ -76,7 +76,7 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Identifier validation (email or phone)
+    // Identifier validation (email)
     if (!formData.identifier) {
       newErrors.identifier = "Email is required";
     } else if (formData.identifier.includes('@')) {
@@ -125,7 +125,7 @@ const Login = () => {
     } catch (error) {
       setErrors(prev => ({
         ...prev,
-        general: "Invalid email/phone or password"
+        general: "Invalid email or password"
       }));
     } finally {
       setIsLoading(false);
@@ -156,7 +156,7 @@ const Login = () => {
           <TextField
             fullWidth
             name="identifier"
-            label="Phone number or email"
+            label="Email"
             value={formData.identifier}
             onChange={handleChange}
             error={!!errors.identifier}
