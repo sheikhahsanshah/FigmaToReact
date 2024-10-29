@@ -5,7 +5,7 @@ const ChatHistory = ({ setCurrentChat, currentChat }) => {
   const chatGroups = {
     Today: [
       {
-        title: "Advanced Machine Learning Pipeline Design",
+        title: "Machine Learning Pipeline",
         messages: [
           {
             content: "I need help designing a ML pipeline for real-time image classification",
