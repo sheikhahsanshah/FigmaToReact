@@ -6,7 +6,7 @@ import Form from "./Form";
 import Messages from "./Messages";
 import { Menu } from "@mui/icons-material";
 
-const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
+const Chat = ({ setShowSidebar, currentChat, isNewChat=false, isDesktop }) => {
   const scrollableDivRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -22,6 +22,9 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
     scrollToBottom();
   }, [currentChat]);
 
+  const HEADER_HEIGHT = "64px";
+  const FORM_HEIGHT = "80px";
+
   return (
     <Box
       component="main"
@@ -32,12 +35,13 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
         height: "100%",
         width: "100%",
         bgcolor: "white",
-        overflow: "hidden", // Prevent horizontal scroll
+        overflow: "hidden",
       }}
     >
       {/* Header */}
       <Box
         sx={{
+          height: HEADER_HEIGHT,
           py: 1.5,
           px: 3,
           display: "flex",
@@ -45,10 +49,11 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
           justifyContent: "space-between",
           borderBottom: "1px solid #E9ECEF",
           backgroundColor: "white",
-          minHeight: "64px",
           width: "100%",
-          position: "sticky",
+          position: "fixed",
           top: 0,
+          right: 0,
+          paddingLeft: isDesktop ? "320px" : "5%",
           zIndex: 10,
         }}
       >
@@ -80,7 +85,7 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
           overflowY: "auto",
           width: "100%",
           backgroundColor: "white",
-          pb: { xs: "80px", md: "100px" },
+          marginBottom: FORM_HEIGHT,
           '&::-webkit-scrollbar': {
             width: '6px',
           },
@@ -99,13 +104,19 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
             width: "100%",
             maxWidth: "100%",
             margin: "0 auto",
+            marginTop:"64px",
+            minHeight: isNewChat ? `calc(100vh - ${HEADER_HEIGHT} - ${FORM_HEIGHT})` : "auto",
           }}
         >
           {isNewChat ? (
             <Box
               sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
                 textAlign: "center",
-                maxWidth: "600px",
+                padding: 3,
               }}
             >
               <img src={logo} alt="logo" style={{ marginBottom: "24px" }} />
@@ -132,8 +143,7 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
                   display: "flex", 
                   alignItems: "center", 
                   justifyContent: "center",
-                  height: "calc(100vh - 200px)",
-                  minHeight: "200px"
+                  minHeight: `calc(100vh - ${HEADER_HEIGHT} - ${FORM_HEIGHT})`,
                 }}
               >
                 <img src={logo} alt="logo" />
@@ -142,30 +152,28 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
               <Messages messages={currentChat.messages} />
             )
           )}
-          
         </Box>
       </Box>
 
-      {/* Form Section - Fixed at bottom with correct width */}
+      {/* Form Section */}
       <Box
         sx={{
-          position: "absolute", // Changed from fixed to absolute
+          position: "fixed",
           bottom: 0,
-          left: 0,
+          left: isDesktop ? "310px" : 0,
           right: 0,
+          height: FORM_HEIGHT,
           backgroundColor: "white",
           borderTop: "1px solid #E9ECEF",
-          zIndex: 10,
           boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
-          width: "100%", // This ensures it takes parent width
+          zIndex: 10,
+          transition: "left 0.3s ease",
         }}
       >
         <Box
           sx={{
+            height: "100%",
             width: "100%",
-            maxWidth: "100%",
-            margin: "0 auto",
-            p: { xs: 2, md: 3 },
           }}
         >
           <Form />

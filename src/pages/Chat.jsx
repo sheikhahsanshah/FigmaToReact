@@ -149,6 +149,7 @@ const ChatPage = () => {
           currentChat={currentChat}
           onBackToSidebar={handleBackToSidebar}
           isNewChat={!isChatSelected && currentChat.messages.length === 0}
+          isDesktop={isDesktop}
         />
       </Suspense>
 
