@@ -29,7 +29,7 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false }) => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
+        height: "100%",
         width: "100%",
         bgcolor: "white",
         overflow: "hidden", // Prevent horizontal scroll
