@@ -117,32 +117,7 @@ const Chat = ({ setShowSidebar, currentChat }) => {
           )}
         </Box>
       </Box>
-
-      {/* Form Section - Fixed at bottom */}
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "white",
-          borderTop: "1px solid #E9ECEF",
-          zIndex: 10,
-          boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
-          width: "100%",
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-            maxWidth: "100%",
-            margin: "0 auto",
-            p: { xs: 2, md: 3 },
-          }}
-        >
           <Form />
-        </Box>
-      </Box>
     </Box>
   );
 };
