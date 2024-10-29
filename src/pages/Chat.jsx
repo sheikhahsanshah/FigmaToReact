@@ -125,11 +125,9 @@ const ChatPage = () => {
           onClick={handleSidebarClose}
           sx={{
             position: "fixed",
-            height: "100%",
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0,
             bgcolor: "rgba(0,0,0,0.5)",
             zIndex: theme.zIndex.drawer - 1,
             transition: "opacity 0.3s ease",
