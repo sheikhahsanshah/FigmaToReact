@@ -7,8 +7,8 @@ import Login from "./pages/Login";
 function ChatApp() {
   return (
     <>
-      <Route exact path={"/"} component={Login} />
-      <Route exact path={"/chat"} component={Chat} />
+      {/* <Route exact path={"/"} component={Login} /> */}
+      <Route exact path={"/"} component={Chat} />
     </>
   );
 }
