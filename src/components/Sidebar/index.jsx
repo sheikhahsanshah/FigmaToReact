@@ -11,24 +11,11 @@ import ChatHistory from "./ChatHistory";
 
 const drawerWidth = 310;
 
-const Sidebar = ({ open, onClose, currentChat, setCurrentChat }) => {
+const Sidebar = ({ open, onClose, currentChat, setCurrentChat, setIsNewChat }) => {
   const handleNewChat = () => {
-    const newChat = {
-      title: "New Chat",
-      messages: [
-        {
-          content: "Hello! How can I help you today?",
-          role: "assistant",
-          attachement: null,
-          isAudio: false,
-          createdAt: new Date(),
-        }
-      ],
-      createdAt: new Date() // Add timestamp for sorting in history
-    };
 
-    // Set this as current chat
-    setCurrentChat(newChat);
+    // Set this as new chat
+    setIsNewChat(true);
 
     // If on mobile, close the sidebar after creating new chat
     if (window.innerWidth <= 991) {

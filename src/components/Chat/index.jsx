@@ -108,7 +108,7 @@ const Chat = ({ setShowSidebar, currentChat, isNewChat=false, isDesktop }) => {
             minHeight: isNewChat ? `calc(100vh - ${HEADER_HEIGHT} - ${FORM_HEIGHT})` : "auto",
           }}
         >
-          {isNewChat ? (
+          {(isNewChat || currentChat === "NewChat") ? (
             <Box
               sx={{
                 display: "flex",

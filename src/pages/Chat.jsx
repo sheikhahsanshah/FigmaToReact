@@ -10,7 +10,7 @@ const ChatPage = () => {
   const [showSidebar, setShowSidebar] = useState(isDesktop); // Only show sidebar initially on desktop
   const [containerWidth, setContainerWidth] = useState(isDesktop ? "400px" : "100%");
   const [isChatSelected, setIsChatSelected] = useState(false); // Start with no chat selected
-  
+  const [isNewChat,setIsNewChat]=useState(true)
   const initialChat = {
     title: "New Chat",
     messages: [], // Empty messages for new chat
@@ -69,6 +69,10 @@ const ChatPage = () => {
     }
   };
 
+  useEffect(()=>{
+    setIsNewChat(!isChatSelected && currentChat.messages.length === 0);
+  },[currentChat,isChatSelected])
+
   return (
     <Box 
       sx={{ 
@@ -117,6 +121,8 @@ const ChatPage = () => {
           }}
           currentChat={currentChat}
           setCurrentChat={handleChatSelection}
+          setIsNewChat={setIsNewChat}
+          
         />
       </Suspense>
 
@@ -148,7 +154,7 @@ const ChatPage = () => {
           }}
           currentChat={currentChat}
           onBackToSidebar={handleBackToSidebar}
-          isNewChat={!isChatSelected && currentChat.messages.length === 0}
+          isNewChat={isNewChat}
           isDesktop={isDesktop}
         />
       </Suspense>

@@ -31,7 +31,7 @@ const Messages = ({ messages = [] }) => {
             {msg?.attachement && !msg?.isAudio && (
               <img
                 src={msg?.attachement}
-                style={{ borderRadius: "10px", width: "200px" }}
+                style={{ borderRadius: "10px", width: "40%" }}
                 alt="attachment"
               />
             )}
